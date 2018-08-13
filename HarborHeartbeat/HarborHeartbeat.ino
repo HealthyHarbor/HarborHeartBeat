@@ -1,6 +1,6 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
-#include <ArduinoJson.h>
+
 
 
 
@@ -13,8 +13,8 @@ int wifiStatus;
  
 // WiFi information
 
-const char WIFI_SSID[] = "ssid";
-const char WIFI_PSK[] = "password";
+const char WIFI_SSID[] = "HarborEast";
+const char WIFI_PSK[] = "7794700200";
 
  
 // Remote site information

@@ -7,18 +7,16 @@
 // the lower dissolved oxygen reading
 // Adding Heartbeat prototype component
 
-
-
-int wifiStatus;
-
 // WiFi information
 
-const char WIFI_SSID[] = "ssid";
+const char WIFI_SSID[] = "Hotspot";
 const char WIFI_PSK[] = "password";
 
 // Remote site information
 const char http_site[] = "18.216.116.112";
 const int http_port = 5000;
+
+int wifiStatus;
 
 // Global variables
 WiFiClient client;
@@ -58,7 +56,7 @@ struct bRGB {
 };
 
 
-
+// set up a software-based serial connction for digital display
 SoftwareSerial s7s(softwareRx, softwareTx);
 char tempString[10];  // Will be used with sprintf to create strings
 
@@ -66,6 +64,11 @@ char tempString[10];  // Will be used with sprintf to create strings
 int error = 0;
 
 bool debug = 1;
+
+// Code runs at start-up
+// Configures I/O pins; resets serial display and sets baud rate
+// Connects to WiFi
+
 void setup() {
   // Set up I/O pins
 
@@ -129,6 +132,7 @@ float reading;
 
 int pollFreq = 160;
 int count = pollFreq;
+
 //bool live;
 bool lastState = 0;
 int lastReading = 0;
@@ -526,3 +530,5 @@ void clearDisplay()
 {
   s7s.write(0x76);  // Clear display command
 }
+
+
