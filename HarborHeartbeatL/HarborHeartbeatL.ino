@@ -12,6 +12,10 @@
 const char WIFI_SSID[] = "Hotspot";
 const char WIFI_PSK[] = "password";
 
+  ///set demo value if not connected;
+  float demo = 6;
+
+
 // Remote site information
 const char http_site[] = "18.216.116.112";
 const int http_port = 5000;
@@ -91,15 +95,15 @@ void setup() {
     s7s.begin(baudRates[i]);  // Set new baud rate
     delay(10);  // Arduino needs a moment to setup serial
     s7s.write(0x7F);  // Send factory reset command
-    s7s.write(0x02);
+
   }
 
   s7s.begin(9600);
   s7s.write(0x7F); // Change Baud rate command
-  s7s.write(0x04); // sets to 19200
+  s7s.write(0x07); // sets to 76800
 
-  s7s.begin(19200);
-
+  s7s.begin(76800);
+  s7s.write(0x02);
   clearDisplay();
 
   // Set up serial communiction for debugging (if on)
@@ -155,9 +159,9 @@ void loop() {
           if( !WiFi.status() ) {
               // error code 1: WiFi disconnected
               error = 1;
-              sprintf(tempString, "-E%1d-", 1);
-              clearDisplay();
-              s7s.print(tempString); //writes to display
+            //  sprintf(tempString, "-E%1d-", 1);
+              //clearDisplay();
+              //s7s.print(tempString); //writes to display
           }
 
           else {
@@ -166,9 +170,9 @@ void loop() {
                 Serial.println("GET request failed");
               }
             warning = 1;
-            sprintf(tempString, "-E%1d-", 2);
-            clearDisplay();
-            s7s.print(tempString); //writes to display
+            //sprintf(tempString, "-E%1d-", 2);
+            //clearDisplay();
+            //s7s.print(tempString); //writes to display
             }
             else{
             warning = 0;
@@ -197,6 +201,15 @@ void loop() {
         }
         count = 0;
         }
+  }
+        else{
+          reading = demo;
+          int read10 = reading*10;
+            sprintf(tempString, "--%2d", read10);
+            clearDisplay();
+            s7s.print(tempString); //writes to display
+            setDecimals(0b00000100);  // Sets digit 3 decimal on
+        }
 
     count++;
 
@@ -215,48 +228,20 @@ void loop() {
       if (debug) {
         Serial.println("Low mode");
       }
-      //sprintf(tempString, " ---");
+
       Beat = beatVals(4.9);
-      //count = pollFreq;
+
     }
       // sets example maximum at 10 DO
       else if (maxMode) {
         if (debug) {
           Serial.println("Max mode");
         }
-      //sprintf(tempString, " ---");
       Beat = beatVals(10);
-      //count = pollFreq;
     }
 
 
-   //tempString[4] = '/0';
     pulse(Beat);
-}
-else{
-  sprintf(tempString, "-E%1d-", 1);
-  clearDisplay();
-  delay(10);
-   s7s.print(tempString);
-   setDecimals(0b00000000);  // Sets digit 3 decimal off
-
-
-    connectWiFi();
-        wifiStatus = WiFi.status();
-        if(wifiStatus == WL_CONNECTED){
-          if (debug) {
-           Serial.println("");
-           Serial.println("Connected.");
-           Serial.println("Your IP address is: ");
-           Serial.println(WiFi.localIP());
-          error = 0;
-          }
-        Serial.println();
-        Serial.print("WiFi Connection Unsuccessful");
-        error = 1;
-        }
-  }
-
 
 
 }
@@ -393,7 +378,7 @@ void connectWiFi() {
 
   // Print "." while we wait for WiFi connection
       int i = 0;
-      while (WiFi.status() != WL_CONNECTED and i<120 ) {
+      while (WiFi.status() != WL_CONNECTED and i<45 ) {
         delay(500);
         if (debug){
         Serial.print(".");
