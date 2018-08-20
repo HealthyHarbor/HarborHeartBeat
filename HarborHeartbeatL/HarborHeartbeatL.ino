@@ -16,9 +16,15 @@ const char WIFI_PSK[] = "password";
   float demo = 6;
 
 
+// Alternate Remote site information
+//const char http_site[] = "18.216.116.112"; // python version
+//const int http_port = 5000;
+//const int page = "/harbor";
+
 // Remote site information
-const char http_site[] = "18.216.116.112";
-const int http_port = 5000;
+const char http_site[] = "18.221.249.213";
+const int http_port = 80;
+const char page[] = "/EPA.php";
 
 int wifiStatus;
 
@@ -103,8 +109,10 @@ void setup() {
   s7s.write(0x07); // sets to 76800
 
   s7s.begin(76800);
-  s7s.write(0x02);
+  delay(10);
+  
   clearDisplay();
+  s7s.print("----");
 
   // Set up serial communiction for debugging (if on)
 if (debug) {
@@ -397,7 +405,7 @@ bool getPage() {
   }
 
   // Make an HTTP GET request
-  client.println("GET /harbor HTTP/1.1");
+  client.println("GET /EPA.php HTTP/1.1");
   client.print("Host: ");
   client.println(http_site);
   client.println("Connection: close");
